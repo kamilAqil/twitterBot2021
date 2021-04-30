@@ -1,0 +1,12 @@
+{
+  "name": "twitterBot2021",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:kamilAqil/twitterBot2021.git",
+  "author": "Kam <kaqil91@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "dotenv": "^8.2.0"
+  }
+}
