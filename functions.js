@@ -1,4 +1,5 @@
 const axios = require('axios').default;
+const fs = require('fs')
 const bearerToken = process.env.BEARER_TOKEN
 
 const basePath = `https://api.twitter.com/2`
@@ -54,20 +55,54 @@ const getUsersFollowed = async(id) => {
         headers : {
             Authorization : `Bearer ${bearerToken}`
         },
-     
+        
     }
 
-        if(nextToken !== ''){
-            config.params.pagination_token = nextToken
-        }
+        // if(nextToken !== ''){
+        //     console.log(`running with nextToken`,nextToken);
+        //     config.params.pagination_token = nextToken
+        // }
+
+
+
+        // let usersFollowed = await axios.request(config).then((data)=>{
+        //     console.log(`data from usersFollowed`,data.data);
+     
+        //     let dataArr = data.data.data
+        //     let meta = data.data.meta
+        //     console.log(`meta stuffs`,meta);
+        //     if(meta.next_token){
+        //         // need to get more true
+        //         nextToken = meta.next_token
+        //         console.log(`there is a next token`,nextToken);
+        //         needToGetMore = true
+        //     }else{
+        //         // need to get more false
+        //         nextToken = ''
+        //         needToGetMore = false
+        //     }
+
+        //     tempArrOfUsersFollowed = tempArrOfUsersFollowed.concat(dataArr)
+        //     console.log(`dataArr in usersFollowed`,dataArr.length);
+        // }).catch((err)=>{
+        //     throw err
+        // })
+
+
 
         while(needToGetMore){
+            if(nextToken !== ''){
+                console.log(`running with nextToken`,nextToken);
+                config.params = {}
+
+                config.params.pagination_token = nextToken
+            }
             let usersFollowed = await axios.request(config).then((data)=>{
                 // console.log(`data from usersFollowed`,data.data);
             
                 let dataArr = data.data.data
                 let meta = data.data.meta
-    
+                console.log(`meta stuffs`,meta);
                 if(meta.next_token){
                     // need to get more true
                     nextToken = meta.next_token
@@ -90,7 +125,14 @@ const getUsersFollowed = async(id) => {
 
 
       
-
+        try {
+            fs.writeFile('usersFollowed.json', tempArrOfUsersFollowed, (err) => {
+                if (err) throw err;
+                console.log('Data written to file');
+            });
+        } catch (error) {
+            console.log(error);
+        }
 
      
 
