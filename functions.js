@@ -61,33 +61,38 @@ const getUsersFollowed = async(id) => {
             config.params.pagination_token = nextToken
         }
 
-
         while(needToGetMore){
-
-          
-
-
-
-
-            console.log(`running loop`);
             let usersFollowed = await axios.request(config).then((data)=>{
-                console.log(`data from usersFollowed`,data.data);
-                if(data.data.meta.next_token){
-                    nextToken = data.data.meta.next_token
-                    needToGetMore = false
+                // console.log(`data from usersFollowed`,data.data);
+            
+                let dataArr = data.data.data
+                let meta = data.data.meta
+    
+                if(meta.next_token){
+                    // need to get more true
+                    nextToken = meta.next_token
+                    needToGetMore = true
                 }else{
+                    // need to get more false
                     nextToken = ''
                     needToGetMore = false
                 }
-                let dataArr = data.data.data
-                tempArrOfUsersFollowed.concat(dataArr)
+    
+                tempArrOfUsersFollowed = tempArrOfUsersFollowed.concat(dataArr)
+                console.log(`dataArr in usersFollowed`,dataArr.length);
             }).catch((err)=>{
                 throw err
             })
         }
 
+      
+     console.log(`tempArrOfUsersFollowed after while loop`,tempArrOfUsersFollowed);
 
-       console.log(`tempArrOfUsersFollowed`,tempArrOfUsersFollowed);
+
+      
+
+
+     
 
 
 
