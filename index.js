@@ -22,9 +22,9 @@ const mainFunc = async()=>{
     if(id !== ''){
         
         try {
-            await functions.getUsersFollowed(id)
+            await functions.addAllFollowersToList(id)
         } catch (error) {
-            console.log(`SOMETHING WENT WRONG getUsersFollowed`,error);
+            console.log(`SOMETHING WENT WRONG addAllFollowersToList`,error);
         }
     }
 

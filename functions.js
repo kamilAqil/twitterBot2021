@@ -4,6 +4,8 @@ const bearerToken = process.env.BEARER_TOKEN
 
 const basePath = `https://api.twitter.com/2`
 
+
+
 const testFunc = async() => {
     console.log(`running test function`);
 }
@@ -123,7 +125,7 @@ const getUsersFollowed = async(id) => {
       
      console.log(`tempArrOfUsersFollowed after while loop`,tempArrOfUsersFollowed);
 
-
+     tempArrOfUsersFollowed = JSON.stringify(tempArrOfUsersFollowed)
       
         try {
             fs.writeFile('usersFollowed.json', tempArrOfUsersFollowed, (err) => {
@@ -141,7 +143,54 @@ const getUsersFollowed = async(id) => {
 }
 
 
+const addAllFollowersToList = async(id) => {
+
+    let urlToGetLists = `https://api.twitter.com/1.1/lists/members/show.json?`
+    
+    let config = {
+        url : urlToGetLists,
+        method : 'get',
+       
+        headers : {
+            Authorization : `Bearer ${bearerToken}`
+        },
+    }
+
+
+    let list = axios.request(config).then((data)=>{
+
+       
+        console.log(`data from list request`,data.data);
+        let entities = data.data.user.entities.description
+        console.log(`entities`,entities);
+    }).catch((err)=>{
+        console.log(`something went wrong getting list`,err.response.data.errors);
+    })
+
+
+
+    let tempData = await fs.readFile('usersFollowed.json','utf-8',(err,data)=>{
+        if(err) throw err
+        data = JSON.parse(data)
+
+
+
+      
+        
+        data.forEach((user)=>{
+            // console.log(user.name);
+        })
+
+
+    })
+
+    
+}
+
+
+
 exports.testFunc = testFunc
 exports.getUserID = getUserID
 
 exports.getUsersFollowed = getUsersFollowed
+exports.addAllFollowersToList = addAllFollowersToList
